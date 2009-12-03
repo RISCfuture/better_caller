@@ -7,11 +7,13 @@ begin
     gem.name = "better_caller"
     gem.summary = %Q{Symbolic call stack with bindings}
     gem.description = %Q{A more programmer-friendly call stack complete with bindings for each level: no more string parsing\!}
-    gem.email = "tim@scribd.com"
+    gem.email = "better_caller@timothymorgan.info"
     gem.homepage = "http://github.com/RISCfuture/better_caller"
     gem.authors = ["Tim Morgan"]
     gem.rubyforge_project = "better_caller"
     gem.add_development_dependency "bacon", ">= 0"
+    gem.extensions = [ 'ext/extconf.rb' ]
+    gem.files = FileList["[A-Z]*.*", "{lib,spec,ext}/**/*"]
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
