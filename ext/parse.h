@@ -173,6 +173,7 @@ typedef union YYSTYPE
     NODE *node;
     ID id;
     int num;
+    const struct vtable *vars;
 
 
 

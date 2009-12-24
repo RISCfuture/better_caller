@@ -130,7 +130,7 @@ static void process_event(rb_event_flag_t event, VALUE data, VALUE self, ID id, 
 // 			break;
 // 		
  		case RUBY_EVENT_RAISE:
-			rb_iv_set(rb_gv_get("$!"), "@better_backtrace", better_caller);
+			rb_iv_set(rb_gv_get("$!"), "@better_backtrace", better_caller(0, 0));
 // 			rb_iv_set(rb_gv_get("$!"), "@bindings", bindings);
 // 			rb_ary_pop(bindings);
  			break;
