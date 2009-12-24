@@ -1,17 +1,69 @@
 = better_caller
 
-Description goes here.
+Author:: Tim Morgan
+Date:: Dec 23, 2009
+License:: Released under the same terms as Ruby.
 
-== Note on Patches/Pull Requests
- 
-* Fork the project.
-* Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
-* Send me a pull request. Bonus points for topic branches.
+== Introduction by example
+
+Actions speak louder than words. Gone are the days of this old suckageness:
+
+ caller #=> ["test.rb:8:in `foo'", "test.rb:16:in `<main>'"]
+
+With better_caller, you get this new hotness:
+
+ require 'better_caller'
+ better_caller #=> [["test.rb", 8, :foo, #<Binding:0x000001010cae50>], ["test.rb", 16, :"<main>", #<Binding:0x000001010caef8>]]
+
+There are a couple of things you may notice. First of all, the okay-that's-nice
+thing: String parsing is a thing of the past. You get the file, line, and method
+as separate elements. This happens <b>at the Ruby interpreter level</b>.
+
+Now, the holy-shit-that's-awesome feature: <b>You get Bindings, all the way up
+the stack.</b> Yes, that's right, you can do this:
+
+  eval "local_variables", better_caller.first.last #=> [ :var1, :var2, :foo ]
+
+You also get this stuff in exception, mondo excellent for debugging:
+
+  $!.better_backtrace # now you can figure out what your local variables were at the time of the exception!
+
+== This is horribly slow, right? You're using some +set_trace_func+ magic that's going to make my Ruby 1,000,000% slower, right?
+
+No. better_caller is a C function that uses the internal Ruby memory structures
+to build its output. Absolutely no +set_trace_func+ and no speed hit.
+
+== Super ominous alpha warning
+
+better_caller is extremely, hyperbolically alpha right now. Here are some known
+obstacles currently preventing it from blowing minds:
+
+* <b>It only works with a very specific version of Ruby (in particular,
+  1.9.1p376).</b> This is because it uses some private Ruby C functions to work
+  its magic, so it keeps a copy of some header files that you're not really
+  supposed to be using.
+* <b>It causes "invalid dfp" crashes sometimes.</b> Every so often, for reasons
+  I _really_ wish I understood, the Ruby interpreter will come down in a ball of
+  fire after regurgitating "invalid dfp" to your console. DFP's and CFP's are
+  still pretty much witch-voodoo to me so I'm having a very hard time debugging
+  this problem.
+
+Despite that, it does work sometimes, and when it does, I think it rocks. If you
+do too, please do me the honor of contributing to this project, _especially_ if
+you're one of the three people on the planet that understand the workings of
+Ruby frame pointers. That would be swell.
+
+=== Additional to-do items
+
+* Comments
+* Specs
+
+== Release History
+
+<b>0.0.1</b> (Dec 23, 2009)
+
+* First public release.
 
 == Copyright
 
-Copyright (c) 2009 Tim Morgan. See LICENSE for details.
+See LICENSE for copyright information.
