@@ -39,7 +39,7 @@ better_caller is extremely, hyperbolically alpha right now. Here are some known
 obstacles currently preventing it from blowing minds:
 
 * <b>It only works with a very specific version of Ruby (in particular,
-  1.9.1p376).</b> This is because it uses some private Ruby C functions to work
+  1.9.2-p0).</b> This is because it uses some private Ruby C functions to work
   its magic, so it keeps a copy of some header files that you're not really
   supposed to be using.
 * <b>It causes "invalid dfp" crashes sometimes.</b> Every so often, for reasons

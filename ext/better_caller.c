@@ -47,7 +47,7 @@ static VALUE backtrace_each(rb_thread_t *th, const rb_control_frame_t *limit_cfp
 			elem = rb_ary_new();
 			rb_ary_push(elem, rb_str_new2(file));
 			rb_ary_push(elem, INT2FIX(line_no));
-			rb_ary_push(elem, ID2SYM(cfp->method_id));
+			rb_ary_push(elem, ID2SYM(cfp->me->def ? cfp->me->def->original_id : cfp->me->called_id));
 			rb_ary_push(elem, Qnil);
 			rb_ary_push(ary, elem);
 		}
