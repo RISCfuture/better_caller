@@ -1,0 +1,65 @@
+h1. better_caller
+
+| *Author* | Tim Morgan |
+| *Date* | Dec 23, 2009 |
+| *License* | MIT (see @LICENSE.txt@ for details) |
+
+h2. Introduction by example
+
+Actions speak louder than words. Gone are the days of this old suckageness:
+
+<pre><code>
+caller #=> ["test.rb:8:in `foo'", "test.rb:16:in `<main>'"]
+</code></pre>
+
+With better_caller, you get this new hotness:
+
+<pre><code>
+require 'better_caller'
+better_caller #=> [["test.rb", 8, :foo, #<Binding:0x000001010cae50>], ["test.rb", 16, :"<main>", #<Binding:0x000001010caef8>]]	
+</code></pre>
+
+There are a couple of things you may notice. First of all, the okay-that's-nice
+thing: String parsing is a thing of the past. You get the file, line, and method
+as separate elements. This happens *at the Ruby interpreter level*.
+
+Now, the holy-shit-that's-awesome feature: *You get bindings, all the way up
+the stack.* Yes, that's right, you can do this:
+
+<pre><code>
+eval "local_variables", better_caller.first.last #=> [ :var1, :var2, :foo ]
+</code></pre>
+
+You also get this stuff in exception, mondo excellent for debugging:
+
+<pre><code>
+$!.better_backtrace # now you can figure out what your local variables were at the time of the exception!
+</code></pre>
+
+h2. This is horribly slow, right? You're using some @set_trace_func@ magic
+that's going to make my Ruby 1,000,000% slower, right?
+
+No. better_caller is a C function that uses the internal Ruby memory structures
+to build its output. Absolutely no @set_trace_func@ and no speed hit.
+
+h2. Super ominous alpha warning
+
+better_caller is extremely, hyperbolically alpha right now. Here are some known
+obstacles currently preventing it from blowing minds:
+
+* *It only works with a very specific version of Ruby (in particular,
+  1.9.2-p136).* This is because it uses some private Ruby C functions to work
+  its magic, so it keeps a copy of some header files that you're not really
+  supposed to be using.
+* *Storing local variables in exceptions isn't quite working yet.* Hopefully
+  I'll have a fix soon; be patient.
+
+Despite that, it does work sometimes, and when it does, I think it rocks. If you
+do too, please do me the honor of contributing to this project, _especially_ if
+you're one of the three people on the planet that understand the workings of
+Ruby frame pointers. That would be swell.
+
+h3. Additional to-do items
+
+* Comments
+* Specs
