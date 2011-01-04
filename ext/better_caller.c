@@ -88,61 +88,20 @@ static VALUE better_caller(int argc, VALUE *argv) {
 	return backtrace(GET_THREAD(), lev);
 }
 
-// static VALUE thread_bindings(VALUE self) {
-// 	VALUE bindings = rb_iv_get(self, "@bindings");
-// 	if (bindings == Qnil) return Qnil;
-// 	return rb_ary_subseq(bindings, 0, RARRAY_LEN(bindings) - 1);
-// }
-// 
 static VALUE exception_better_backtrace(VALUE self) {
 	return rb_iv_get(self, "@better_backtrace");
 }
-// 
+
 static void process_event(rb_event_flag_t event, VALUE data, VALUE self, ID id, VALUE klass) {
-// 	VALUE thread = rb_thread_current();
-// 	VALUE subarray;
-// 	
-// 	VALUE bindings = rb_iv_get(thread, "@bindings");
-// 	if (bindings == Qnil) {
-// 		bindings = rb_ary_new();
-// 		rb_iv_set(thread, "@bindings", bindings);
-// 	}
-// 	
  	switch (event) {
-// 		// case RUBY_EVENT_LINE:
-// 		// 	if (RARRAY_LEN(bindings) == 0) rb_ary_push(bindings, rb_binding_new());
-// 		// 	break;
-// 			
-// 		case RUBY_EVENT_CLASS:
-// 		case RUBY_EVENT_CALL:
-// 		case RUBY_EVENT_C_CALL:
-// 			subarray = rb_ary_new();
-// 			rb_ary_push(subarray, rb_str_new2(rb_sourcefile()));
-// 			rb_ary_push(subarray, id ? ID2SYM(id) : Qnil);
-// 			rb_ary_push(subarray, rb_binding_new());
-// 			rb_ary_push(bindings, subarray);
-// 			break;
-// 		
-// 		case RUBY_EVENT_END:
-// 		case RUBY_EVENT_RETURN:
-// 		case RUBY_EVENT_C_RETURN:
-// 			rb_ary_pop(bindings);
-// 			break;
-// 		
  		case RUBY_EVENT_RAISE:
-			rb_iv_set(rb_gv_get("$!"), "@better_backtrace", better_caller(0, 0));
-// 			rb_iv_set(rb_gv_get("$!"), "@bindings", bindings);
-// 			rb_ary_pop(bindings);
+			rb_funcall(rb_gv_get("$!"), rb_intern("set_better_backtrace"), 1, better_caller(0, 0));
  			break;
 	}
 }
 
 void Init_better_caller() {
 	rb_define_method(rb_eException, "better_backtrace", exception_better_backtrace, 0);
-	// rb_define_method(rb_cThread, "bindings", thread_bindings, 0);
 	rb_define_global_function("better_caller", better_caller, -1);
-	// int events = RUBY_EVENT_CLASS|RUBY_EVENT_CALL|RUBY_EVENT_C_CALL|RUBY_EVENT_END|RUBY_EVENT_RETURN|RUBY_EVENT_C_RETURN|RUBY_EVENT_RAISE;
-	// rb_add_event_hook(process_event, events, Qnil);
-	// rb_add_event_hook(process_event, RUBY_EVENT_ALL, Qnil);
 	rb_add_event_hook(process_event, RUBY_EVENT_RAISE, Qnil);
 }
