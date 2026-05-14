@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{better_caller}
-  s.version = "0.1.1"
+  s.version = "0.1.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Tim Morgan"]
@@ -58,7 +58,16 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
-  s.summary = %q{Symbolic call stack with bindings}
+  s.summary = %q{[DEPRECATED] Symbolic call stack with bindings}
+  s.post_install_message = <<~MSG
+
+    ⚠️  DEPRECATED: better_caller is no longer maintained.
+
+    Ruby's modern `caller_locations` builtin (added in 2.0) covers most use cases.
+
+    This is the final release. No further updates are planned.
+
+  MSG
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION

@@ -1,3 +1,9 @@
+h2. ⚠️ DEPRECATED
+
+*This gem is no longer maintained.* Ruby's modern @caller_locations@ builtin (added in 2.0) covers most use cases.
+
+----
+
 h1. better_caller
 
 | *Author* | Tim Morgan |
